@@ -20209,12 +20209,12 @@ var Pet = function Pet(props) {
       props.name
     ),
     _react2.default.createElement(
-      "h2",
+      "p",
       null,
       props.animal
     ),
     _react2.default.createElement(
-      "h2",
+      "p",
       null,
       props.breed
     )
@@ -20222,7 +20222,7 @@ var Pet = function Pet(props) {
 };
 
 exports.default = Pet;
-},{"react":"../node_modules/react/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"App.jsx":[function(require,module,exports) {
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20237,7 +20237,7 @@ var _petfinderClient = require("petfinder-client");
 
 var _petfinderClient2 = _interopRequireDefault(_petfinderClient);
 
-var _Pet = require("./Pet");
+var _Pet = require("./Pet.jsx");
 
 var _Pet2 = _interopRequireDefault(_Pet);
 
@@ -20257,20 +20257,39 @@ var petfinder = (0, _petfinderClient2.default)({
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    _this.state = {
+      pets: []
+    };
+    return _this;
   }
 
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var promise = petfinder.breed.list({
-        animal: "dog"
-      });
+      var _this2 = this;
 
-      promise.then(console.log, console.error);
+      petfinder.pet.find({ output: "full", location: "Atlanta, GA" }).then(function (data) {
+        var pets = void 0;
+
+        if (data.petfinder.pets && data.petfinder.pets.pet) {
+          if (Array.isArray(data.petfinder.pets.pet)) {
+            pets = data.petfinder.pets.pet;
+          } else {
+            pets = [data.petfinder.pets.pet];
+          }
+        } else {
+          pets = [];
+        }
+
+        _this2.setState({
+          pets: pets
+        });
+      });
     }
   }, {
     key: "render",
@@ -20282,6 +20301,20 @@ var App = function (_React$Component) {
           "h1",
           null,
           " Adopt Me! "
+        ),
+        _react2.default.createElement(
+          "div",
+          null,
+          this.state.pets.map(function (pet) {
+            var breed = void 0;
+
+            if (Array.isArray(pet.breeds.breed)) {
+              breed = pet.breeds.breed.join(", ");
+            } else {
+              breed = pet.breeds.breed;
+            }
+            return _react2.default.createElement(_Pet2.default, { animal: pet.animal, name: pet.name, breed: breed });
+          })
         )
       );
     }
@@ -20291,7 +20324,7 @@ var App = function (_React$Component) {
 }(_react2.default.Component);
 
 (0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById("root"));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","petfinder-client":"../node_modules/petfinder-client/index.js","./Pet":"Pet.jsx"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","petfinder-client":"../node_modules/petfinder-client/index.js","./Pet.jsx":"Pet.jsx"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -20320,7 +20353,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52233' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57426' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -20461,5 +20494,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","App.js"], null)
-//# sourceMappingURL=/App.88ff9274.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","App.jsx"], null)
+//# sourceMappingURL=/App.f64b89c9.map
